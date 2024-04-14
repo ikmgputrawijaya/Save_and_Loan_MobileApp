@@ -11,18 +11,34 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Login',
+        title: Text(
+          'Login Page',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Color.fromARGB(255, 59, 166, 254),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Text(
+                'Login to Plesir',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color.fromARGB(255, 59, 166, 254),
+                  fontFamily: 'Pacifico',
+                  fontSize: 35,
+                ),
+              ),
+              const SizedBox(height: 30.0),
+              Image.asset(
+                'images/auth.jpg',
+                height: 250,
+              ),
+              const SizedBox(height: 20.0),
               TextField(
                 controller: usernameController,
                 decoration: InputDecoration(
@@ -43,7 +59,7 @@ class LoginPage extends StatelessWidget {
                   String enteredUsername = usernameController.text;
                   String enteredPassword = passwordController.text;
 
-                  if (enteredUsername == 'admin' &&
+                  if (enteredUsername == 'user' &&
                       enteredPassword == 'password') {
                     Navigator.push(
                       context,

@@ -12,17 +12,33 @@ class RegisterPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Register',
+          'Register Page',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Color.fromARGB(255, 24, 197, 145),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Text(
+                'Register to Plesir',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color.fromARGB(255, 24, 197, 145),
+                  fontFamily: 'Pacifico',
+                  fontSize: 35,
+                ),
+              ),
+              const SizedBox(height: 00.0),
+              Image.asset(
+                'images/regis.jpg',
+                height: 350,
+              ),
+              SizedBox(height: 00.0),
               TextField(
                 controller: usernameController,
                 decoration: InputDecoration(
@@ -40,8 +56,6 @@ class RegisterPage extends StatelessWidget {
               SizedBox(height: 20.0),
               ElevatedButton(
                 onPressed: () {
-                  // Proses registrasi disini
-                  // Setelah berhasil registrasi, arahkan ke halaman utama
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => HomePage()),
