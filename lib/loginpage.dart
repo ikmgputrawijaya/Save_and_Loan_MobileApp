@@ -69,7 +69,7 @@ class LoginPage extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                            'Login gagal. Mohon periksa kembali username dan password Anda.'),
+                            'Failed to log in. Please check your credentials and try again.'),
                       ),
                     );
                   }
