@@ -1,23 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:dio/dio.dart';
+import 'package:firstapp/profile.dart';
+import 'package:firstapp/member.dart';
+
+final _storage = GetStorage();
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  final _storage = GetStorage();
+  final _dio = Dio();
+  final _apiUrl = 'https://mobileapis.manpits.xyz/api';
   int _selectedIndex = 0;
 
-  static List<Widget> _widgetOptions = <Widget>[
-    Text('Home Page'),
-    Text('Bookings Page'),
-    Text('Chat Page'),
-    Text('Profile Page'),
-  ];
+  void logout(BuildContext context) async {
+    try {
+      final _response = await _dio.get(
+        '${_apiUrl}/logout',
+        options: Options(
+          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
+        ),
+      );
+      print(_response.data);
+
+      _storage.erase();
+
+      Navigator.pushReplacementNamed(context, '/welcomepage');
+    } on DioException catch (e) {
+      print('${e.response} - ${e.response?.statusCode}');
+    }
+  }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      if (index == 0) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      } else if (index == 1) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MemberPage()),
+        );
+      } else if (index == 2) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProfilePage()),
+        );
+      }
     });
   }
 
@@ -27,7 +65,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Color.fromARGB(255, 160, 209, 250),
       appBar: AppBar(
         title: Text(
-          'Hello, Putra',
+          'Hello',
           style: TextStyle(
             color: Color.fromARGB(255, 59, 166, 254),
             fontFamily: 'Pacifico',
@@ -44,6 +82,14 @@ class _HomePageState extends State<HomePage> {
               color: Color.fromARGB(255, 138, 138, 138),
             ),
             onPressed: () {},
+          ),
+          IconButton(
+            onPressed: () => logout(context),
+            icon: const Icon(
+              Icons.logout,
+              size: 39,
+              color: Color.fromARGB(255, 138, 138, 138),
+            ),
           ),
         ],
         bottom: PreferredSize(
@@ -80,12 +126,12 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: 22.0),
+                    padding: EdgeInsets.only(top: 20.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.asset(
                         'images/tegenungan.jpg',
-                        width: 350,
+                        width: 320,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -132,12 +178,12 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: 22.0),
+                    padding: EdgeInsets.only(top: 20.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.asset(
                         'images/uluwatu.jpg',
-                        width: 350,
+                        width: 320,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -184,24 +230,20 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, size: 48),
+            icon: Icon(Icons.home_rounded, size: 48, color: Colors.blue),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat_rounded, size: 37.5),
-            label: 'Chat',
+            icon: Icon(Icons.list, size: 40),
+            label: 'Member List',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark_rounded, size: 40),
-            label: 'Bookings',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_rounded, size: 47),
+            icon: Icon(Icons.person_rounded, size: 45),
             label: 'Profile',
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: const Color.fromARGB(255, 138, 138, 138),
         unselectedItemColor: const Color.fromARGB(255, 138, 138, 138),
         onTap: _onItemTapped,
       ),

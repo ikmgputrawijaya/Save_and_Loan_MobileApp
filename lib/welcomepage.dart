@@ -10,25 +10,17 @@ class WelcomePage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Container(
-          decoration: BoxDecoration(color: Colors.white),
+          decoration: BoxDecoration(color: Color.fromARGB(255, 180, 244, 255)),
           padding: EdgeInsets.all(20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              SizedBox(height: 0.01),
+              Image.asset('images/applogo.png'),
+              Image.asset('images/appname.png'),
               Text(
-                'Welcome to Plesir',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color.fromARGB(255, 62, 133, 255),
-                  fontFamily: 'Pacifico',
-                  fontSize: 40,
-                ),
-              ),
-              SizedBox(height: 5.0),
-              Image.asset('images/logo.png'),
-              Text(
-                'Lets start your holiday journey!',
+                '     ',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Montserrat',
@@ -66,7 +58,7 @@ class WelcomePage extends StatelessWidget {
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
-                      Color.fromARGB(255, 96, 215, 100)),
+                      Color.fromARGB(255, 84, 221, 120)),
                   padding: MaterialStateProperty.all(
                     EdgeInsets.symmetric(vertical: 15.0),
                   ),

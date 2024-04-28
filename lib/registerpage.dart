@@ -1,11 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'homepage.dart';
+import 'package:get_storage/get_storage.dart';
 
-class RegisterPage extends StatelessWidget {
-  final TextEditingController usernameController = TextEditingController();
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final baseUrl = 'https://mobileapis.manpits.xyz/api';
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
-  RegisterPage({Key? key});
+  final _dio = Dio();
+  final _storage = GetStorage();
+  final _apiUrl = 'https://mobileapis.manpits.xyz/api';
+
+  void register() async {
+    try {
+      final _response = await _dio.post(
+        '${_apiUrl}/register',
+        data: {
+          'name': nameController.text,
+          'email': emailController.text,
+          'password': passwordController.text,
+          'confirmpassword': confirmPasswordController.text,
+        },
+      );
+      print(_response.data);
+    } on DioException catch (e) {
+      print('${e.response} - ${e.response?.statusCode}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +57,7 @@ class RegisterPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Register to Plesir',
+                'Lets Register',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color.fromARGB(255, 24, 197, 145),
@@ -33,19 +65,26 @@ class RegisterPage extends StatelessWidget {
                   fontSize: 35,
                 ),
               ),
-              const SizedBox(height: 00.0),
+              const SizedBox(height: 20.0),
               Image.asset(
                 'images/regis.jpg',
-                height: 350,
+                height: 250,
               ),
-              SizedBox(height: 00.0),
+              const SizedBox(height: 20.0),
               TextField(
-                controller: usernameController,
+                controller: nameController,
                 decoration: InputDecoration(
-                  labelText: 'Username',
+                  labelText: 'Name',
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                ),
+              ),
+              const SizedBox(height: 20.0),
               TextField(
                 controller: passwordController,
                 obscureText: true,
@@ -53,15 +92,21 @@ class RegisterPage extends StatelessWidget {
                   labelText: 'Password',
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
+              TextField(
+                controller: confirmPasswordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Confirm Password',
+                ),
+              ),
+              const SizedBox(height: 20.0),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
-                  );
+                  register();
+                  Navigator.pushReplacementNamed(context, '/loginpage');
                 },
-                child: Text('Register'),
+                child: Text('Daftar'),
               ),
             ],
           ),
