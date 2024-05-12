@@ -1,3 +1,5 @@
+import 'package:firstapp/createmember.dart';
+import 'package:firstapp/editmember.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/homepage.dart';
 import 'package:firstapp/loginpage.dart';
@@ -25,6 +27,8 @@ class MyApp extends StatelessWidget {
         '/homepage': (context) => HomePage(),
         '/profile': (context) => ProfilePage(),
         '/member': (context) => MemberPage(),
+        '/createMember': (context) => createMemberPage(),
+        '/editMember': (context) => editMemberPage(),
       },
       initialRoute: '/',
       debugShowCheckedModeBanner: false,

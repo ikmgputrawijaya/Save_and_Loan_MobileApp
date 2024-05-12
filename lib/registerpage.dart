@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'homepage.dart';
+import 'package:firstapp/homepage.dart';
 import 'package:get_storage/get_storage.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -106,7 +106,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   register();
                   Navigator.pushReplacementNamed(context, '/loginpage');
                 },
-                child: Text('Daftar'),
+                child: Text('Register'),
               ),
             ],
           ),
