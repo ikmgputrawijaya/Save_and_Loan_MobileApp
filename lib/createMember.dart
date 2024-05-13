@@ -3,7 +3,7 @@ import 'api.dart';
 import 'package:get_storage/get_storage.dart';
 
 class createMemberPage extends StatefulWidget {
-  const createMemberPage({super.key});
+  const createMemberPage({Key? key});
 
   @override
   State<createMemberPage> createState() => _RegisterPageState();
@@ -11,29 +11,27 @@ class createMemberPage extends StatefulWidget {
 
 class _RegisterPageState extends State<createMemberPage> {
   final _storage = GetStorage();
-  final nomerIndukController = TextEditingController();
-  final namaController = TextEditingController();
-  final alamatController = TextEditingController();
-  final ttlController = TextEditingController();
-  final teleponController = TextEditingController();
+  final noRegController = TextEditingController();
+  final nameController = TextEditingController();
+  final addressController = TextEditingController();
+  final birthController = TextEditingController();
+  final tlpController = TextEditingController();
   int status_aktif = 1;
 
-  bool isVisible = false;
-  bool isVisibleConfirm = false;
-
+  @override
   void dispose() {
-    nomerIndukController.dispose();
-    namaController.dispose();
-    alamatController.dispose();
-    ttlController.dispose();
-    teleponController.dispose();
+    noRegController.dispose();
+    nameController.dispose();
+    addressController.dispose();
+    birthController.dispose();
+    tlpController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 160, 209, 250),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
         title: Text(
           'Add Member',
@@ -52,14 +50,20 @@ class _RegisterPageState extends State<createMemberPage> {
           SizedBox(
             height: 20,
           ),
-          formInput('Registration Number', nomerIndukController),
-          formInput('Name', namaController),
-          formInput('Address', alamatController),
-          formInput('Date of Birth', ttlController),
-          formInput('Telephone', teleponController),
-          SizedBox(height: 20),
-          DropdownButton<int>(
+          formInput('Registration Number', noRegController),
+          formInput('Name', nameController),
+          formInput('Address', addressController),
+          formInput('Date of Birth', birthController),
+          formInput('Telephone', tlpController),
+          SizedBox(height: 1),
+          DropdownButtonFormField<int>(
             value: status_aktif,
+            decoration: InputDecoration(
+              labelText: 'Status',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
             items: [
               DropdownMenuItem<int>(
                 child: Text("Active"),
@@ -72,7 +76,9 @@ class _RegisterPageState extends State<createMemberPage> {
             ],
             onChanged: (int? value) {
               if (value != null) {
-                status_aktif = value;
+                setState(() {
+                  status_aktif = value;
+                });
               }
             },
           ),
@@ -81,12 +87,12 @@ class _RegisterPageState extends State<createMemberPage> {
             onPressed: () {
               createMember(
                 context,
-                int.parse(nomerIndukController.text),
-                teleponController.text,
+                int.parse(noRegController.text),
+                tlpController.text,
                 status_aktif,
-                namaController.text,
-                alamatController.text,
-                ttlController.text,
+                nameController.text,
+                addressController.text,
+                birthController.text,
               );
             },
             child: Text("Submit"),

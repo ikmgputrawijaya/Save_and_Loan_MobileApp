@@ -131,7 +131,7 @@ void editMember(context, id, nomer_induk, telepon, status_aktif, nama, alamat,
   }
 }
 
-void deleteAnggota(context, id) async {
+void deleteMember(context, id) async {
   try {
     final _response = await _dio.delete(
       '${_apiUrl}/anggota/${id}',

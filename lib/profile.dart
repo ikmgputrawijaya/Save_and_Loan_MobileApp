@@ -92,10 +92,10 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 1.0),
+            SizedBox(height: 2.0),
             Card(
               elevation: 5,
-              margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              margin: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -111,6 +111,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       style: TextStyle(
                         color: Color.fromARGB(255, 0, 0, 0),
                         fontSize: 17,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     subtitle: Text(
@@ -155,29 +156,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                   ),
+                  ListTile(),
+                  ListTile(),
+                  ListTile(),
+                  ListTile(),
+                  ListTile(),
                 ],
-              ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {},
-              child: Text('Edit Profile'),
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(160, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => logout(context),
-              child: Text('Log out'),
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(160, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
               ),
             ),
           ],

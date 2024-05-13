@@ -24,15 +24,38 @@ class MemberPage extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(
-              Icons.add,
+              Icons.person_add,
               size: 34,
-              color: Colors.black,
+              color: const Color.fromARGB(255, 90, 90, 90),
             ),
             onPressed: () {
               Navigator.pushNamed(context, '/createMember');
             },
           ),
         ],
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(90.0),
+          child: Container(
+            padding: EdgeInsets.only(bottom: 20.0),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 13.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: '  Search...',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  suffixIcon: Padding(
+                    padding: EdgeInsets.all(9.0),
+                    child: Icon(Icons.search, size: 25),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
       body: FutureBuilder(
         future: getAnggota(),
@@ -51,75 +74,119 @@ class MemberPage extends StatelessWidget {
                     const Divider(),
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
-                    height: 100,
+                    height: 50,
                     decoration: BoxDecoration(
                       color: const Color.fromARGB(255, 255, 255, 255),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: ListTile(
-                        leading: Icon(
-                          Icons.person,
-                          size: 40,
-                        ),
-                        title: Text('${_storage.read('nama_${index + 1}')}'),
-                        subtitle:
-                            Text('${_storage.read('telepon_${index + 1}')}'),
-                        trailing: PopupMenuButton(
-                          itemBuilder: (context) => [
-                            PopupMenuItem(
-                              child: Text('Edit'),
-                              value: 'Edit',
-                            ),
-                            PopupMenuItem(
-                              child: Text('Delete'),
-                              value: 'Delete',
-                            ),
-                            PopupMenuItem(
-                              child: Text('Detail'),
-                              value: 'Detail',
-                            ),
-                          ],
-                          onSelected: (value) {
-                            if (value == 'Edit') {
+                      leading: Icon(
+                        Icons.person,
+                        size: 40,
+                      ),
+                      title: Text('${_storage.read('nama_${index + 1}')}'),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () {
                               getEditAnggotaDetail(
                                   context, _storage.read('id_${index + 1}'));
-                            } else if (value == 'Delete') {
-                              deleteAnggota(
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              deleteMember(
                                   context, _storage.read('id_${index + 1}'));
-                            } else if (value == 'Detail') {
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.info),
+                            onPressed: () {
                               showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: const Text('close'),
-                                      ),
-                                    ],
-                                    title: Text('Detail Anggota'),
-                                    contentPadding: EdgeInsets.all(20.0),
-                                    content: Column(
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Close'),
+                                    ),
+                                  ],
+                                  title: Text(
+                                    'Detail',
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  contentPadding: EdgeInsets.all(20.0),
+                                  content: SingleChildScrollView(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                            'Nama: ${_storage.read('nama_${index + 1}')}'),
-                                        Text(
-                                            'Nomor Induk: ${_storage.read('nomor_induk_${index + 1}')}'),
-                                        Text(
-                                            'Telepon: ${_storage.read('telepon_${index + 1}')}'),
-                                        Text(
-                                            'Status Aktif: ${_storage.read('status_aktif_${index + 1}')}'),
-                                        Text(
-                                            'Alamat: ${_storage.read('alamat_${index + 1}')}'),
-                                        Text(
-                                            'Tanggal Lahir: ${_storage.read('tgl_lahir_${index + 1}')}'),
+                                        Card(
+                                          elevation: 5,
+                                          child: ListTile(
+                                            title: Text('Name'),
+                                            subtitle: Text(
+                                                '${_storage.read('nama_${index + 1}')}'),
+                                          ),
+                                        ),
+                                        Card(
+                                          elevation: 5,
+                                          child: ListTile(
+                                            title: Text('Registration Number'),
+                                            subtitle: Text(
+                                                '${_storage.read('nomor_induk_${index + 1}')}'),
+                                          ),
+                                        ),
+                                        Card(
+                                          elevation: 5,
+                                          child: ListTile(
+                                            title: Text('Telephone'),
+                                            subtitle: Text(
+                                                '${_storage.read('telepon_${index + 1}')}'),
+                                          ),
+                                        ),
+                                        Card(
+                                          elevation: 5,
+                                          child: ListTile(
+                                            title: Text('Status'),
+                                            subtitle: Text(
+                                                '${_storage.read('status_aktif_${index + 1}')}'),
+                                          ),
+                                        ),
+                                        Card(
+                                          elevation: 5,
+                                          child: ListTile(
+                                            title: Text('Address'),
+                                            subtitle: Text(
+                                                '${_storage.read('alamat_${index + 1}')}'),
+                                          ),
+                                        ),
+                                        Card(
+                                          elevation: 5,
+                                          child: ListTile(
+                                            title: Text('Date of Birth'),
+                                            subtitle: Text(
+                                                '${_storage.read('tgl_lahir_${index + 1}')}'),
+                                          ),
+                                        ),
                                       ],
-                                    )),
+                                    ),
+                                  ),
+                                ),
                               );
-                            }
-                          },
-                        )),
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                   );
                 },
               ),

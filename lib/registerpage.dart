@@ -43,16 +43,11 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Register Page',
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Color.fromARGB(255, 24, 197, 145),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Color.fromARGB(255, 56, 183, 141)),
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -60,15 +55,15 @@ class _RegisterPageState extends State<RegisterPage> {
                 'Lets Register',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Color.fromARGB(255, 24, 197, 145),
+                  color: Color(0xFF18C591),
                   fontFamily: 'Pacifico',
                   fontSize: 35,
                 ),
               ),
-              const SizedBox(height: 20.0),
+              const SizedBox(height: 30.0),
               Image.asset(
-                'images/regis.jpg',
-                height: 250,
+                'images/regis.png',
+                height: 220,
               ),
               const SizedBox(height: 20.0),
               TextField(

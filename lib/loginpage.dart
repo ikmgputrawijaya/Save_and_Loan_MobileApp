@@ -44,16 +44,11 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Login Page',
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Color.fromARGB(255, 59, 166, 254),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Color.fromARGB(255, 50, 132, 255)),
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -69,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 30.0),
               Image.asset(
                 'images/auth.jpg',
-                height: 250,
+                height: 285,
               ),
               const SizedBox(height: 20.0),
               TextField(
