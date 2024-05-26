@@ -1,3 +1,5 @@
+import 'package:firstapp/homepage.dart';
+import 'package:firstapp/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:firstapp/api.dart';
@@ -5,7 +7,44 @@ import 'package:firstapp/createMember.dart';
 
 final _storage = GetStorage();
 
-class MemberPage extends StatelessWidget {
+class MemberPage extends StatefulWidget {
+  @override
+  State<MemberPage> createState() => _MemberPageState();
+}
+
+class _MemberPageState extends State<MemberPage> {
+  int _selectedIndex = 1;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      if (index == 0) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      } else if (index == 1) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MemberPage()),
+        );
+      } else if (index == 2) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProfilePage()),
+        );
+      }
+    });
+  }
+
+  String convertStatus(int status) {
+    if (status == 1) {
+      return 'Active';
+    }
+
+    return 'Non Active';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +59,7 @@ class MemberPage extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        automaticallyImplyLeading: true,
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: Icon(
@@ -157,8 +196,9 @@ class MemberPage extends StatelessWidget {
                                           elevation: 5,
                                           child: ListTile(
                                             title: Text('Status'),
-                                            subtitle: Text(
-                                                '${_storage.read('status_aktif_${index + 1}')}'),
+                                            subtitle: Text(convertStatus(
+                                                _storage.read(
+                                                    'status_aktif_${index + 1}'))),
                                           ),
                                         ),
                                         Card(
@@ -193,6 +233,26 @@ class MemberPage extends StatelessWidget {
             );
           }
         },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_rounded, size: 48),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list, size: 40, color: Colors.blue),
+            label: 'Member List',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_rounded, size: 45),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: const Color.fromARGB(255, 138, 138, 138),
+        unselectedItemColor: const Color.fromARGB(255, 138, 138, 138),
+        onTap: _onItemTapped,
       ),
     );
   }

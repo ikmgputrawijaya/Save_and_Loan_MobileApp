@@ -1,3 +1,5 @@
+import 'package:firstapp/homepage.dart';
+import 'package:firstapp/member.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:dio/dio.dart';
@@ -5,7 +7,6 @@ import 'welcomepage.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
-
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
@@ -14,6 +15,30 @@ class _ProfilePageState extends State<ProfilePage> {
   final _dio = Dio();
   final _storage = GetStorage();
   final _apiUrl = 'https://mobileapis.manpits.xyz/api';
+
+  int _selectedIndex = 2;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      if (index == 0) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      } else if (index == 1) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MemberPage()),
+        );
+      } else if (index == 2) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProfilePage()),
+        );
+      }
+    });
+  }
 
   void detailUser() async {
     try {
@@ -76,7 +101,7 @@ class _ProfilePageState extends State<ProfilePage> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        automaticallyImplyLeading: true,
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: Icon(
@@ -166,6 +191,26 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_rounded, size: 48),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list, size: 40),
+            label: 'Member List',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_rounded, size: 45, color: Colors.blue),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: const Color.fromARGB(255, 138, 138, 138),
+        unselectedItemColor: const Color.fromARGB(255, 138, 138, 138),
+        onTap: _onItemTapped,
       ),
     );
   }

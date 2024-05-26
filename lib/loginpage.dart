@@ -19,21 +19,55 @@ class _LoginPageState extends State<LoginPage> {
   final _apiUrl = 'https://mobileapis.manpits.xyz/api';
 
   void login() async {
+    final email = emailController.text;
+    final password = passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      _showErrorDialog('Email and password cannot be empty');
+      return;
+    }
+
     try {
       final _response = await _dio.post(
-        '${_apiUrl}/login',
+        '$_apiUrl/login',
         data: {
-          'email': emailController.text,
-          'password': passwordController.text
+          'email': email,
+          'password': password,
         },
       );
       print(_response.data);
       _storage.write('token', _response.data['data']['token']);
-    } on DioException catch (e) {
-      print('${e.response} - ${e.response?.statusCode}');
+      Navigator.pushReplacementNamed(context, '/homepage');
+    } on DioError catch (e) {
+      if (e.response != null && e.response?.statusCode == 401) {
+        _showErrorDialog('Incorrect email or password');
+      } else {
+        _showErrorDialog('There is an error. Please try again.');
+      }
     }
   }
 
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
@@ -83,10 +117,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 20.0),
               ElevatedButton(
-                onPressed: () {
-                  login();
-                  Navigator.pushReplacementNamed(context, '/homepage');
-                },
+                onPressed: login,
                 child: const Text('Login'),
               ),
             ],
