@@ -18,12 +18,37 @@ class _RegisterPageState extends State<editMemberPage> {
   int status_aktif = 1;
 
   @override
+  void initState() {
+    super.initState();
+    // Initialize controllers with stored values
+    nameController.text = _storage.read('anggota_nama') ?? '';
+    addressController.text = _storage.read('anggota_alamat') ?? '';
+    birthController.text = _storage.read('anggota_tgl_lahir') ?? '';
+    tlpController.text = _storage.read('anggota_telepon') ?? '';
+  }
+
+  @override
   void dispose() {
     nameController.dispose();
     addressController.dispose();
     birthController.dispose();
     tlpController.dispose();
     super.dispose();
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      setState(() {
+        birthController.text =
+            "${picked.toLocal()}".split(' ')[0]; // Format date as needed
+      });
+    }
   }
 
   @override
@@ -46,13 +71,11 @@ class _RegisterPageState extends State<editMemberPage> {
         children: [
           Column(
             children: [
-              formInput('Name', nameController, _storage.read('anggota_nama')),
-              formInput('Address', addressController,
-                  _storage.read('anggota_alamat')),
+              formInput('Name', nameController),
+              formInput('Address', addressController),
               formInput('Date of Birth', birthController,
-                  _storage.read('anggota_tgl_lahir')),
-              formInput(
-                  'Telephone', tlpController, _storage.read('anggota_telepon')),
+                  onTap: () => _selectDate(context)),
+              formInput('Telephone', tlpController),
               Padding(
                 padding: EdgeInsets.all(20),
                 child: DropdownButtonFormField<int>(
@@ -110,8 +133,8 @@ class _RegisterPageState extends State<editMemberPage> {
   }
 }
 
-Widget formInput(String label, TextEditingController controller, String data) {
-  controller.text = data;
+Widget formInput(String label, TextEditingController controller,
+    {VoidCallback? onTap}) {
   return Padding(
     padding: EdgeInsets.only(top: 20),
     child: Center(
@@ -133,9 +156,7 @@ Widget formInput(String label, TextEditingController controller, String data) {
               borderSide: BorderSide(color: Colors.red, width: 1),
             ),
           ),
-          onChanged: (value) {
-            print(controller.text);
-          },
+          onTap: onTap, // Trigger date picker on tap
         ),
       ),
     ),

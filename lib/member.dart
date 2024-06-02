@@ -72,29 +72,29 @@ class _MemberPageState extends State<MemberPage> {
             },
           ),
         ],
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(90.0),
-          child: Container(
-            padding: EdgeInsets.only(bottom: 20.0),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 13.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: '  Search...',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  suffixIcon: Padding(
-                    padding: EdgeInsets.all(9.0),
-                    child: Icon(Icons.search, size: 25),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
+        // bottom: PreferredSize(
+        //   preferredSize: Size.fromHeight(90.0),
+        //   child: Container(
+        //     padding: EdgeInsets.only(bottom: 20.0),
+        //     child: Padding(
+        //       padding: EdgeInsets.symmetric(horizontal: 13.0),
+        //       child: TextField(
+        //         decoration: InputDecoration(
+        //           hintText: '  Search...',
+        //           filled: true,
+        //           fillColor: Colors.white,
+        //           border: OutlineInputBorder(
+        //             borderRadius: BorderRadius.circular(30.0),
+        //           ),
+        //           suffixIcon: Padding(
+        //             padding: EdgeInsets.all(9.0),
+        //             child: Icon(Icons.search, size: 25),
+        //           ),
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ),
       body: FutureBuilder(
         future: getAnggota(),
@@ -144,84 +144,87 @@ class _MemberPageState extends State<MemberPage> {
                           IconButton(
                             icon: Icon(Icons.info),
                             onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('Close'),
-                                    ),
-                                  ],
-                                  title: Text(
-                                    'Detail',
-                                    style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  contentPadding: EdgeInsets.all(20.0),
-                                  content: SingleChildScrollView(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Card(
-                                          elevation: 5,
-                                          child: ListTile(
-                                            title: Text('Name'),
-                                            subtitle: Text(
-                                                '${_storage.read('nama_${index + 1}')}'),
-                                          ),
-                                        ),
-                                        Card(
-                                          elevation: 5,
-                                          child: ListTile(
-                                            title: Text('Registration Number'),
-                                            subtitle: Text(
-                                                '${_storage.read('nomor_induk_${index + 1}')}'),
-                                          ),
-                                        ),
-                                        Card(
-                                          elevation: 5,
-                                          child: ListTile(
-                                            title: Text('Telephone'),
-                                            subtitle: Text(
-                                                '${_storage.read('telepon_${index + 1}')}'),
-                                          ),
-                                        ),
-                                        Card(
-                                          elevation: 5,
-                                          child: ListTile(
-                                            title: Text('Status'),
-                                            subtitle: Text(convertStatus(
-                                                _storage.read(
-                                                    'status_aktif_${index + 1}'))),
-                                          ),
-                                        ),
-                                        Card(
-                                          elevation: 5,
-                                          child: ListTile(
-                                            title: Text('Address'),
-                                            subtitle: Text(
-                                                '${_storage.read('alamat_${index + 1}')}'),
-                                          ),
-                                        ),
-                                        Card(
-                                          elevation: 5,
-                                          child: ListTile(
-                                            title: Text('Date of Birth'),
-                                            subtitle: Text(
-                                                '${_storage.read('tgl_lahir_${index + 1}')}'),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
+                              getAnggotaDetail(
+                                  context, _storage.read('id_${index + 1}'));
+
+                              //   showDialog(
+                              //     context: context,
+                              //     builder: (context) => AlertDialog(
+                              //       actions: [
+                              //         TextButton(
+                              //           onPressed: () {
+                              //             Navigator.of(context).pop();
+                              //           },
+                              //           child: const Text('Close'),
+                              //         ),
+                              //       ],
+                              //       title: Text(
+                              //         'Detail',
+                              //         style: TextStyle(
+                              //           color: Colors.blue,
+                              //           fontWeight: FontWeight.bold,
+                              //         ),
+                              //       ),
+                              //       contentPadding: EdgeInsets.all(20.0),
+                              //       content: SingleChildScrollView(
+                              //         child: Column(
+                              //           crossAxisAlignment:
+                              //               CrossAxisAlignment.start,
+                              //           children: [
+                              //             Card(
+                              //               elevation: 5,
+                              //               child: ListTile(
+                              //                 title: Text('Name'),
+                              //                 subtitle: Text(
+                              //                     '${_storage.read('nama_${index + 1}')}'),
+                              //               ),
+                              //             ),
+                              //             Card(
+                              //               elevation: 5,
+                              //               child: ListTile(
+                              //                 title: Text('Registration Number'),
+                              //                 subtitle: Text(
+                              //                     '${_storage.read('nomor_induk_${index + 1}')}'),
+                              //               ),
+                              //             ),
+                              //             Card(
+                              //               elevation: 5,
+                              //               child: ListTile(
+                              //                 title: Text('Telephone'),
+                              //                 subtitle: Text(
+                              //                     '${_storage.read('telepon_${index + 1}')}'),
+                              //               ),
+                              //             ),
+                              //             Card(
+                              //               elevation: 5,
+                              //               child: ListTile(
+                              //                 title: Text('Status'),
+                              //                 subtitle: Text(convertStatus(
+                              //                     _storage.read(
+                              //                         'status_aktif_${index + 1}'))),
+                              //               ),
+                              //             ),
+                              //             Card(
+                              //               elevation: 5,
+                              //               child: ListTile(
+                              //                 title: Text('Address'),
+                              //                 subtitle: Text(
+                              //                     '${_storage.read('alamat_${index + 1}')}'),
+                              //               ),
+                              //             ),
+                              //             Card(
+                              //               elevation: 5,
+                              //               child: ListTile(
+                              //                 title: Text('Date of Birth'),
+                              //                 subtitle: Text(
+                              //                     '${_storage.read('tgl_lahir_${index + 1}')}'),
+                              //               ),
+                              //             ),
+                              //           ],
+                              //         ),
+                              //       ),
+                              //     ),
+                              //   );
                             },
                           ),
                         ],

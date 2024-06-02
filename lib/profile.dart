@@ -164,23 +164,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   Divider(),
-                  ListTile(
-                    title: Text(
-                      'Bio:',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 0, 0, 0),
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: Text(
-                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 0, 0, 0),
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
                   ListTile(),
                   ListTile(),
                   ListTile(),

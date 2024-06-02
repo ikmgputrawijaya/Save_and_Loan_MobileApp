@@ -28,6 +28,21 @@ class _RegisterPageState extends State<createMemberPage> {
     super.dispose();
   }
 
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      setState(() {
+        birthController.text =
+            "${picked.toLocal()}".split(' ')[0]; // Format date as needed
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,13 +62,12 @@ class _RegisterPageState extends State<createMemberPage> {
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         children: [
-          SizedBox(
-            height: 20,
-          ),
+          SizedBox(height: 20),
           formInput('Registration Number', noRegController),
           formInput('Name', nameController),
           formInput('Address', addressController),
-          formInput('Date of Birth', birthController),
+          formInput('Date of Birth', birthController,
+              onTap: () => _selectDate(context)),
           formInput('Telephone', tlpController),
           SizedBox(height: 1),
           DropdownButtonFormField<int>(
@@ -103,11 +117,13 @@ class _RegisterPageState extends State<createMemberPage> {
   }
 }
 
-Widget formInput(String label, TextEditingController controller) {
+Widget formInput(String label, TextEditingController controller,
+    {VoidCallback? onTap}) {
   return Padding(
     padding: EdgeInsets.only(bottom: 20),
     child: TextField(
       controller: controller,
+      readOnly: onTap != null,
       decoration: InputDecoration(
         fillColor: Color.fromARGB(255, 255, 255, 255),
         labelText: label,
@@ -115,6 +131,7 @@ Widget formInput(String label, TextEditingController controller) {
           borderRadius: BorderRadius.circular(10),
         ),
       ),
+      onTap: onTap,
     ),
   );
 }

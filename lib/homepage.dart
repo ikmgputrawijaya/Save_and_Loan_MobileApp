@@ -3,6 +3,9 @@ import 'package:get_storage/get_storage.dart';
 import 'package:dio/dio.dart';
 import 'package:firstapp/profile.dart';
 import 'package:firstapp/member.dart';
+import 'package:firstapp/transaction.dart';
+import 'package:firstapp/api.dart';
+
 
 final _storage = GetStorage();
 
@@ -120,113 +123,116 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             SizedBox(height: 10.0),
-            Card(
-              elevation: 5,
-              margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 20.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        'images/tegenungan.jpg',
-                        width: 320,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  ListTile(
-                    title: Text(
-                      'Tegenungan Waterfall',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 0, 0, 0),
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Ticket Price      :  Rp 15.000',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 0, 0, 0),
-                            fontFamily: 'Montserrat',
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          'Location           : Gianyar, Bali',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 0, 0, 0),
-                            fontFamily: 'Montserrat',
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Card(
-              elevation: 5,
-              margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 20.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        'images/uluwatu.jpg',
-                        width: 320,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  ListTile(
-                    title: Text(
-                      'Uluwatu',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 0, 0, 0),
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Ticket Price      :  Rp 30.000',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 0, 0, 0),
-                            fontFamily: 'Montserrat',
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          'Location           : Gianyar, Bali',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 0, 0, 0),
-                            fontFamily: 'Montserrat',
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            // Card(
+            //   elevation: 5,
+            //   margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            //   child: Column(
+            //     children: [
+            //       Padding(
+            //         padding: EdgeInsets.only(top: 20.0),
+            //         child: ClipRRect(
+            //           borderRadius: BorderRadius.circular(10),
+            //           child: Image.asset(
+            //             'images/tegenungan.jpg',
+            //             width: 320,
+            //             fit: BoxFit.cover,
+            //           ),
+            //         ),
+            //       ),
+            //       ListTile(
+            //         title: Text(
+            //           'Tegenungan Waterfall',
+            //           style: TextStyle(
+            //             color: Color.fromARGB(255, 0, 0, 0),
+            //             fontSize: 17,
+            //             fontWeight: FontWeight.bold,
+            //           ),
+            //         ),
+            //         subtitle: Column(
+            //           crossAxisAlignment: CrossAxisAlignment.start,
+            //           children: [
+            //             Text(
+            //               'Ticket Price      :  Rp 15.000',
+            //               style: TextStyle(
+            //                 color: Color.fromARGB(255, 0, 0, 0),
+            //                 fontFamily: 'Montserrat',
+            //                 fontSize: 15,
+            //                 fontWeight: FontWeight.bold,
+            //               ),
+            //             ),
+            //             Text(
+            //               'Location           : Gianyar, Bali',
+            //               style: TextStyle(
+            //                 color: Color.fromARGB(255, 0, 0, 0),
+            //                 fontFamily: 'Montserrat',
+            //                 fontSize: 15,
+            //                 fontWeight: FontWeight.bold,
+            //               ),
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // Card(
+            //   elevation: 5,
+            //   margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            //   child: Column(
+            //     children: [
+            //       Padding(
+            //         padding: EdgeInsets.only(top: 20.0),
+            //         child: ClipRRect(
+            //           borderRadius: BorderRadius.circular(10),
+            //           child: Image.asset(
+            //             'images/uluwatu.jpg',
+            //             width: 320,
+            //             fit: BoxFit.cover,
+            //           ),
+            //         ),
+            //       ),
+            //       ListTile(
+            //         title: Text(
+            //           'Uluwatu',
+            //           style: TextStyle(
+            //             color: Color.fromARGB(255, 0, 0, 0),
+            //             fontSize: 17,
+            //             fontWeight: FontWeight.bold,
+            //           ),
+            //         ),
+            //         subtitle: Column(
+            //           crossAxisAlignment: CrossAxisAlignment.start,
+            //           children: [
+            //             Text(
+            //               'Ticket Price      :  Rp 30.000',
+            //               style: TextStyle(
+            //                 color: Color.fromARGB(255, 0, 0, 0),
+            //                 fontFamily: 'Montserrat',
+            //                 fontSize: 15,
+            //                 fontWeight: FontWeight.bold,
+            //               ),
+            //             ),
+            //             Text(
+            //               'Location           : Gianyar, Bali',
+            //               style: TextStyle(
+            //                 color: Color.fromARGB(255, 0, 0, 0),
+            //                 fontFamily: 'Montserrat',
+            //                 fontSize: 15,
+            //                 fontWeight: FontWeight.bold,
+            //               ),
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),
+
+
+      
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

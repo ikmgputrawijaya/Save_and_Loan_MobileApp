@@ -1,5 +1,6 @@
 import 'package:firstapp/createmember.dart';
-import 'package:firstapp/editmember.dart';
+import 'package:firstapp/detailMember.dart';
+import 'package:firstapp/editMember.dart';
 import 'package:flutter/material.dart';
 import 'package:firstapp/homepage.dart';
 import 'package:firstapp/loginpage.dart';
@@ -7,6 +8,8 @@ import 'package:firstapp/registerpage.dart';
 import 'package:firstapp/welcomepage.dart';
 import 'package:firstapp/profile.dart';
 import 'package:firstapp/member.dart';
+import 'package:firstapp/addTrans.dart';
+import 'package:firstapp/transConfirm.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:dio/dio.dart';
 
@@ -29,6 +32,9 @@ class MyApp extends StatelessWidget {
         '/member': (context) => MemberPage(),
         '/createMember': (context) => createMemberPage(),
         '/editMember': (context) => editMemberPage(),
+        '/detailMember': (context) => DetailMemberPage(),
+        '/addTrans': (context) => addTransPage(),
+        '/transConfirm': (context) => ConfirmTransactionPage(),
       },
       initialRoute: '/',
       debugShowCheckedModeBanner: false,
