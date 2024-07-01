@@ -240,8 +240,8 @@ class _MemberPageState extends State<MemberPage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded, size: 48),
-            label: 'Home',
+            icon: Icon(Icons.percent_rounded, size: 40),
+            label: 'Bunga',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list, size: 40, color: Colors.blue),

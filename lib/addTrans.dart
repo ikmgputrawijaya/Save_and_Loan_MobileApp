@@ -91,9 +91,17 @@ class _addTransPageState extends State<addTransPage> {
                           value: 3,
                           child: Text("Penarikan"),
                         ),
+                        // DropdownMenuItem<int>(
+                        //   value: 4,
+                        //   child: Text("Bunga Simpanan"),
+                        // ),
                         DropdownMenuItem<int>(
-                          value: 4,
-                          child: Text("Bunga Simpanan"),
+                          value: 5,
+                          child: Text("Koreksi Penambahan"),
+                        ),
+                        DropdownMenuItem<int>(
+                          value: 6,
+                          child: Text("Koreksi Pengurangan"),
                         ),
                       ],
                       onChanged: (int? value) {

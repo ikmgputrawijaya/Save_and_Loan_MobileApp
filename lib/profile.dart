@@ -66,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void logout(BuildContext context) async {
     try {
       final _response = await _dio.get(
-        '${_apiUrl}/logout',
+        '$_apiUrl/logout',
         options: Options(
           headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
         ),
@@ -110,6 +110,14 @@ class _ProfilePageState extends State<ProfilePage> {
               color: Color.fromARGB(255, 138, 138, 138),
             ),
             onPressed: () {},
+          ),
+          IconButton(
+            onPressed: () => logout(context),
+            icon: const Icon(
+              Icons.logout,
+              size: 39,
+              color: Color.fromARGB(255, 138, 138, 138),
+            ),
           ),
         ],
       ),
@@ -178,8 +186,8 @@ class _ProfilePageState extends State<ProfilePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded, size: 48),
-            label: 'Home',
+            icon: Icon(Icons.percent_rounded, size: 40),
+            label: 'Bunga',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list, size: 40),

@@ -196,7 +196,7 @@ void getBanyakAnggota() async {
   }
 }
 
-void getSaldo(id) async {
+Future<void> getSaldo(id) async {
   try {
     final _response = await _dio.get(
       '${_apiUrl}/saldo/${id}',
@@ -206,8 +206,9 @@ void getSaldo(id) async {
     );
     _storage.write('saldo_${id}', _response.data['data']['saldo']);
     print(_storage.read('saldo_${id}'));
-  } on DioException catch (e) {
+  } on DioError catch (e) {
     print('${e.response} - ${e.response?.statusCode}');
+    throw e; // Re-throw the error to handle it elsewhere if needed
   }
 }
 
@@ -222,23 +223,20 @@ Future<void> getRiwayat(id) async {
   print("masuk getRiwayat");
   try {
     final _response = await _dio.get(
-      '${_apiUrl}/tabungan/${id}',
+      '${_apiUrl}/tabungan/$id',
       options: Options(
         headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
       ),
     );
-    // _storage.write('riwayat_${id}', _response.data['data']['tabungan']);
     for (var tabungan in _response.data['data']['tabungan']) {
       count += 1;
-
-      _storage.write('id_${count}', tabungan['id']);
-      _storage.write('trx_tanggal_${count}', tabungan['trx_tanggal']);
-      _storage.write('trx_id_${count}', tabungan['trx_id']);
-      _storage.write('trx_nominal_${count}', tabungan['trx_nominal']);
+      _storage.write('id_$count', tabungan['id']);
+      _storage.write('trx_tanggal_$count', tabungan['trx_tanggal']);
+      _storage.write('trx_id_$count', tabungan['trx_id']);
+      _storage.write('trx_nominal_$count', tabungan['trx_nominal']);
     }
     _storage.write('banyak_riwayat', count);
     print(_storage.read('banyak_riwayat'));
-    // print(_storage.read('riwayat_${id}'));
   } on DioException catch (e) {
     print('${e.response} - ${e.response?.statusCode}');
   }
@@ -247,19 +245,35 @@ Future<void> getRiwayat(id) async {
 void addTabungan(
     String id, String trx_id, String trx_nominal, BuildContext context) async {
   try {
+    // Menentukan endpoint sesuai dengan jenis transaksi
+    final endpoint = '${_apiUrl}/tabungan';
+
+    // Membuat data request sesuai dengan jenis transaksi
+    final requestData = {
+      'anggota_id': id,
+      'trx_id': trx_id,
+      'trx_nominal': trx_nominal,
+    };
+
+    // Mengirimkan request ke server
     final _response = await _dio.post(
-      '${_apiUrl}/tabungan',
-      data: {'anggota_id': id, 'trx_id': trx_id, 'trx_nominal': trx_nominal},
+      endpoint,
+      data: requestData,
       options: Options(
         headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
       ),
     );
-    print(_response);
-    _storage.remove('saldo_${id}');
-    getSaldo(id);
+
+    print(_response.data);
+
+    // Memperbarui saldo anggota setelah transaksi
+    _storage.remove('saldo_$id');
+    await getSaldo(id);
+
+    // Navigasi ke halaman konfirmasi transaksi
     Navigator.pop(context);
     Navigator.pushReplacementNamed(context, "/transConfirm");
   } on DioException catch (e) {
-    print('error: ${e.response} - ${e.response?.statusCode}');
+    print('Error: ${e.response} - ${e.response?.statusCode}');
   }
 }

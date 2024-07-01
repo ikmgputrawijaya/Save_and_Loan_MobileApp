@@ -3,9 +3,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:dio/dio.dart';
 import 'package:firstapp/profile.dart';
 import 'package:firstapp/member.dart';
-import 'package:firstapp/transaction.dart';
 import 'package:firstapp/api.dart';
-
 
 final _storage = GetStorage();
 
@@ -21,22 +19,65 @@ class _HomePageState extends State<HomePage> {
   final _dio = Dio();
   final _apiUrl = 'https://mobileapis.manpits.xyz/api';
   int _selectedIndex = 0;
+  final TextEditingController _percentController = TextEditingController();
+  String _currentInterest = 'Loading...';
 
-  void logout(BuildContext context) async {
+  @override
+  void initState() {
+    super.initState();
+    _initializeInterest();
+  }
+
+  Future<void> _initializeInterest() async {
+    String res = await getActiveInterest(context);
+    if (mounted) {
+      setState(() {
+        _currentInterest = res.isEmpty ? "None" : res;
+      });
+    }
+  }
+
+  Future<String> getActiveInterest(BuildContext context) async {
     try {
-      final _response = await _dio.get(
-        '${_apiUrl}/logout',
+      final response = await _dio.get(
+        '$_apiUrl/settingbunga',
         options: Options(
           headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
         ),
       );
-      print(_response.data);
 
-      _storage.erase();
+      // Debugging: Tampilkan respons API
+      print("Response data: ${response.data}");
 
-      Navigator.pushReplacementNamed(context, '/welcomepage');
-    } on DioException catch (e) {
-      print('${e.response} - ${e.response?.statusCode}');
+      // Pastikan data ada dan akses dengan aman menggunakan null-aware operator
+      final activeBunga = response.data['data']?['activebunga'];
+      final persen = activeBunga?['persen'];
+      return persen?.toString() ?? "";
+    } catch (e) {
+      // Debugging: Tampilkan kesalahan
+      print("Error: $e");
+      return "";
+    }
+  }
+
+  Future<void> addActiveInterest(BuildContext context, String percent) async {
+    try {
+      final response = await _dio.post(
+        '$_apiUrl/addsettingbunga',
+        data: {'persen': percent, 'isaktif': '1'},
+        options: Options(
+          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
+        ),
+      );
+
+      // Debugging: Tampilkan respons API
+      print("Response Data: ${response.data}");
+
+      // Asumsi sukses selalu berhasil, karena tidak ada validasi
+      Navigator.pushReplacementNamed(context, '/homepage');
+    } catch (e) {
+      // Debugging: Tampilkan kesalahan
+      print("Error: $e");
     }
   }
 
@@ -62,12 +103,17 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> _updateInterest() async {
+    await addActiveInterest(context, _percentController.text);
+    await _initializeInterest();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 160, 209, 250),
+      backgroundColor: const Color.fromARGB(255, 160, 209, 250),
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Hello',
           style: TextStyle(
             color: Color.fromARGB(255, 59, 166, 254),
@@ -79,165 +125,94 @@ class _HomePageState extends State<HomePage> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.settings,
               size: 39,
               color: Color.fromARGB(255, 138, 138, 138),
             ),
             onPressed: () {},
           ),
-          IconButton(
-            onPressed: () => logout(context),
-            icon: const Icon(
-              Icons.logout,
-              size: 39,
-              color: Color.fromARGB(255, 138, 138, 138),
-            ),
-          ),
         ],
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(90.0),
-          child: Container(
-            padding: EdgeInsets.only(bottom: 20.0),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 13.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: '  Search...',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  suffixIcon: Padding(
-                    padding: EdgeInsets.all(9.0),
-                    child: Icon(Icons.search, size: 25),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 10.0),
-            // Card(
-            //   elevation: 5,
-            //   margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            //   child: Column(
-            //     children: [
-            //       Padding(
-            //         padding: EdgeInsets.only(top: 20.0),
-            //         child: ClipRRect(
-            //           borderRadius: BorderRadius.circular(10),
-            //           child: Image.asset(
-            //             'images/tegenungan.jpg',
-            //             width: 320,
-            //             fit: BoxFit.cover,
-            //           ),
-            //         ),
-            //       ),
-            //       ListTile(
-            //         title: Text(
-            //           'Tegenungan Waterfall',
-            //           style: TextStyle(
-            //             color: Color.fromARGB(255, 0, 0, 0),
-            //             fontSize: 17,
-            //             fontWeight: FontWeight.bold,
-            //           ),
-            //         ),
-            //         subtitle: Column(
-            //           crossAxisAlignment: CrossAxisAlignment.start,
-            //           children: [
-            //             Text(
-            //               'Ticket Price      :  Rp 15.000',
-            //               style: TextStyle(
-            //                 color: Color.fromARGB(255, 0, 0, 0),
-            //                 fontFamily: 'Montserrat',
-            //                 fontSize: 15,
-            //                 fontWeight: FontWeight.bold,
-            //               ),
-            //             ),
-            //             Text(
-            //               'Location           : Gianyar, Bali',
-            //               style: TextStyle(
-            //                 color: Color.fromARGB(255, 0, 0, 0),
-            //                 fontFamily: 'Montserrat',
-            //                 fontSize: 15,
-            //                 fontWeight: FontWeight.bold,
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            // Card(
-            //   elevation: 5,
-            //   margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            //   child: Column(
-            //     children: [
-            //       Padding(
-            //         padding: EdgeInsets.only(top: 20.0),
-            //         child: ClipRRect(
-            //           borderRadius: BorderRadius.circular(10),
-            //           child: Image.asset(
-            //             'images/uluwatu.jpg',
-            //             width: 320,
-            //             fit: BoxFit.cover,
-            //           ),
-            //         ),
-            //       ),
-            //       ListTile(
-            //         title: Text(
-            //           'Uluwatu',
-            //           style: TextStyle(
-            //             color: Color.fromARGB(255, 0, 0, 0),
-            //             fontSize: 17,
-            //             fontWeight: FontWeight.bold,
-            //           ),
-            //         ),
-            //         subtitle: Column(
-            //           crossAxisAlignment: CrossAxisAlignment.start,
-            //           children: [
-            //             Text(
-            //               'Ticket Price      :  Rp 30.000',
-            //               style: TextStyle(
-            //                 color: Color.fromARGB(255, 0, 0, 0),
-            //                 fontFamily: 'Montserrat',
-            //                 fontSize: 15,
-            //                 fontWeight: FontWeight.bold,
-            //               ),
-            //             ),
-            //             Text(
-            //               'Location           : Gianyar, Bali',
-            //               style: TextStyle(
-            //                 color: Color.fromARGB(255, 0, 0, 0),
-            //                 fontFamily: 'Montserrat',
-            //                 fontSize: 15,
-            //                 fontWeight: FontWeight.bold,
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
+            const SizedBox(height: 20.0),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Center(
+                    child: Column(
+                      children: [
+                        const Text(
+                          'Active Interest:',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 0, 0, 0)),
+                        ),
+                        const SizedBox(height: 10),
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Text(
+                            '$_currentInterest%',
+                            style: const TextStyle(
+                              fontSize: 40,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  TextField(
+                    controller: _percentController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Interest Percentage',
+                      border: OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Color.fromARGB(255, 222, 242, 255),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _updateInterest,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    child: Text(
+                      'Add Interest',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
-
-
-      
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded, size: 48, color: Colors.blue),
-            label: 'Home',
+            icon: Icon(Icons.percent_rounded, size: 40, color: Colors.blue),
+            label: 'Interest',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list, size: 40),
