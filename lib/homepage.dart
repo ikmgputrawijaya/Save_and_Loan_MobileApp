@@ -15,21 +15,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _storage = GetStorage();
   final _dio = Dio();
   final _apiUrl = 'https://mobileapis.manpits.xyz/api';
   int _selectedIndex = 0;
   final TextEditingController _percentController = TextEditingController();
   String _currentInterest = 'Loading...';
+  List<Map<String, dynamic>> _interestHistory = [];
 
   @override
   void initState() {
     super.initState();
     _initializeInterest();
+    _fetchInterestHistory();
   }
 
   Future<void> _initializeInterest() async {
-    String res = await getActiveInterest(context);
+    String res = await getActiveInterest();
     if (mounted) {
       setState(() {
         _currentInterest = res.isEmpty ? "None" : res;
@@ -37,7 +38,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<String> getActiveInterest(BuildContext context) async {
+  Future<String> getActiveInterest() async {
     try {
       final response = await _dio.get(
         '$_apiUrl/settingbunga',
@@ -46,21 +47,47 @@ class _HomePageState extends State<HomePage> {
         ),
       );
 
-      // Debugging: Tampilkan respons API
-      print("Response data: ${response.data}");
-
-      // Pastikan data ada dan akses dengan aman menggunakan null-aware operator
       final activeBunga = response.data['data']?['activebunga'];
       final persen = activeBunga?['persen'];
       return persen?.toString() ?? "";
     } catch (e) {
-      // Debugging: Tampilkan kesalahan
       print("Error: $e");
       return "";
     }
   }
 
-  Future<void> addActiveInterest(BuildContext context, String percent) async {
+  Future<List<Map<String, dynamic>>> getInterestHistory() async {
+    try {
+      final response = await _dio.get(
+        '$_apiUrl/settingbunga',
+        options: Options(
+          headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
+        ),
+      );
+
+      print("Response data: ${response.data}");
+
+      final settingBungas = response.data['data']?['settingbungas'];
+      if (settingBungas is List) {
+        return List<Map<String, dynamic>>.from(settingBungas);
+      }
+      return [];
+    } catch (e) {
+      print("Error: $e");
+      return [];
+    }
+  }
+
+  Future<void> _fetchInterestHistory() async {
+    List<Map<String, dynamic>> history = await getInterestHistory();
+    if (mounted) {
+      setState(() {
+        _interestHistory = history;
+      });
+    }
+  }
+
+  Future<void> addActiveInterest(String percent) async {
     try {
       final response = await _dio.post(
         '$_apiUrl/addsettingbunga',
@@ -70,13 +97,10 @@ class _HomePageState extends State<HomePage> {
         ),
       );
 
-      // Debugging: Tampilkan respons API
       print("Response Data: ${response.data}");
 
-      // Asumsi sukses selalu berhasil, karena tidak ada validasi
       Navigator.pushReplacementNamed(context, '/homepage');
     } catch (e) {
-      // Debugging: Tampilkan kesalahan
       print("Error: $e");
     }
   }
@@ -104,8 +128,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _updateInterest() async {
-    await addActiveInterest(context, _percentController.text);
+    await addActiveInterest(_percentController.text);
     await _initializeInterest();
+    await _fetchInterestHistory();
   }
 
   @override
@@ -114,7 +139,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: const Color.fromARGB(255, 160, 209, 250),
       appBar: AppBar(
         title: const Text(
-          'Hello',
+          'Interest',
           style: TextStyle(
             color: Color.fromARGB(255, 59, 166, 254),
             fontFamily: 'Pacifico',
@@ -149,14 +174,15 @@ class _HomePageState extends State<HomePage> {
                         const Text(
                           'Active Interest:',
                           style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromARGB(255, 0, 0, 0)),
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                          ),
                         ),
                         const SizedBox(height: 10),
                         Container(
                           padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Colors.blue,
                             shape: BoxShape.circle,
                           ),
@@ -172,15 +198,18 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   TextField(
                     controller: _percentController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Interest Percentage',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                            10.0), // Ubah nilai sesuai keinginan Anda
+                      ),
                       filled: true,
-                      fillColor: Color.fromARGB(255, 222, 242, 255),
+                      fillColor: Color.fromARGB(255, 255, 255, 255),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -193,13 +222,70 @@ class _HomePageState extends State<HomePage> {
                         borderRadius: BorderRadius.circular(5),
                       ),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Add Interest',
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.black,
                       ),
                     ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Divider(
+                    color: Colors.black,
+                    height: 1,
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Interest History:',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  ListView.builder(
+                    reverse: true,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _interestHistory.length,
+                    itemBuilder: (context, index) {
+                      final item = _interestHistory[index];
+                      Color textColor =
+                          item['isaktif'] == 1 ? Colors.green : Colors.red;
+                      IconData iconData = item['isaktif'] == 1
+                          ? Icons.check_circle
+                          : Icons.cancel;
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 0.0, vertical: 0.0),
+                        child: Card(
+                          elevation: 1,
+                          child: ListTile(
+                            title: Text(
+                              'Interest: ${item['persen']}%',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: Colors.black,
+                              ),
+                            ),
+                            subtitle: Text(
+                              'Status: ${item['isaktif'] == 1 ? 'Active' : 'Inactive'}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: textColor,
+                              ),
+                            ),
+                            trailing: Icon(
+                              iconData,
+                              color: textColor,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),

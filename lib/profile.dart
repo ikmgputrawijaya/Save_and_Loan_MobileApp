@@ -40,7 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  void detailUser() async {
+  Future<void> detailUser() async {
     try {
       if (_storage.read('id') != null ||
           _storage.read('name') != null ||
@@ -48,18 +48,22 @@ class _ProfilePageState extends State<ProfilePage> {
         return;
       }
 
-      final _response = await _dio.get(
-        '${_apiUrl}/user',
+      final response = await _dio.get(
+        '$_apiUrl/user',
         options: Options(
           headers: {'Authorization': 'Bearer ${_storage.read('token')}'},
         ),
       );
 
-      _storage.write('id', _response.data['data']['user']['id']);
-      _storage.write('name', _response.data['data']['user']['name']);
-      _storage.write('email', _response.data['data']['user']['email']);
-    } on DioException catch (e) {
-      return;
+      final userData = response.data['data']['user'];
+
+      setState(() {
+        _storage.write('id', userData['id']);
+        _storage.write('name', userData['name']);
+        _storage.write('email', userData['email']);
+      });
+    } on DioError catch (e) {
+      print('Error fetching user data: $e');
     }
   }
 

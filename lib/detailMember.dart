@@ -161,6 +161,7 @@ class _DetailMemberState extends State<DetailMemberPage> {
                           int index = _storage.read('banyak_riwayat');
 
                           return ListView.builder(
+                            reverse: true,
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
                             itemCount: index,
@@ -220,8 +221,7 @@ class _DetailMemberState extends State<DetailMemberPage> {
                                         case 6:
                                           return Text("Koreksi Pengurangan");
                                         default:
-                                          return Text(
-                                              "Transaksi Tidak Dikenal");
+                                          return Text("Unknown Transaction");
                                       }
                                     }(),
                                     subtitle: Text(
